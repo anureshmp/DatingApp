@@ -6,9 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class MembersController : ControllerBase
+    public class MembersController : BaseApiController
     {
         public readonly AppDbContext _dbcontext;
         public MembersController(AppDbContext dbContext)
