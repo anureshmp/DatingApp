@@ -5,6 +5,7 @@ using API.DTOs;
 using API.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -39,6 +40,10 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<AppUser>> Register(RegisterDTO registerDTO)
         {
+            var userExists = await _dbContext.Users.SingleOrDefaultAsync(x => x.Email == registerDTO.Email);
+
+            if (userExists != null) return BadRequest();
+
             using var hmac = new HMACSHA512();
             var user = new AppUser
             {
@@ -54,5 +59,28 @@ namespace API.Controllers
             return user;
             
         }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<AppUser>> Login(LoginDTO loginDTO)
+        {
+            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.Email == loginDTO.Email);
+
+            if (user == null) return Unauthorized("Invalid email address");
+
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
+
+            for(var i = 0; i < computedHash.Length; i++)
+            {
+                if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid Password");
+
+            }
+
+            return user;
+           
+        }
+
+
     }
 }
