@@ -2,11 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgClass } from '../../node_modules/@angular/common/types/_common_module-chunk';
+import { Nav } from '../layout/nav/nav';
 
 @Component({
   selector: 'app-root',
   styleUrl: './app.css',
-  templateUrl: './app.html'
+  templateUrl: './app.html',
+  imports: [Nav]
 })
 export class App implements OnInit {
 
