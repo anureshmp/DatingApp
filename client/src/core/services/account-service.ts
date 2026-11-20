@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Service, signal } from '@angular/core';
 import { User } from '../../types/user';
 import { tap } from 'rxjs';
+import { RegisterCreds } from '../../types/registercreds';
+import { LoginCreds } from '../../types/logincreds';
 
 @Service()
 export class AccountService {
@@ -10,15 +12,30 @@ export class AccountService {
 
     baseUrl = 'https://localhost:5001/api/';
 
-    login(creds: any) {
-        return this.http.post<User>(this.baseUrl + 'account/login', creds).pipe(
+    register(creds: RegisterCreds) {
+        return this.http.post<User>(this.baseUrl + 'account/register', creds).pipe(
             tap(user => {
                 if (user) {
-                    localStorage.setItem('user', JSON.stringify(user))
-                    this.currentUser.set(user)
+                    this.setCurrentUser(user)
                 }
             })
         )
+
+    }
+
+    login(creds: LoginCreds) {
+        return this.http.post<User>(this.baseUrl + 'account/login', creds).pipe(
+            tap(user => {
+                if (user) {
+                    this.setCurrentUser(user);
+                }
+            })
+        )
+    }
+
+    setCurrentUser(user: User) {
+        localStorage.setItem('user', JSON.stringify(user))
+        this.currentUser.set(user)
     }
 
     logout() {
