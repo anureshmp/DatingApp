@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { NgClass } from '../../node_modules/@angular/common/types/_common_module-chunk';
+import { Router, RouterOutlet } from '@angular/router';
+import { NgClass } from '@angular/common';
 import { Nav } from '../layout/nav/nav';
 import { AccountService } from '../core/services/account-service';
 import { Home } from '../features/home/home';
@@ -11,10 +11,11 @@ import { User } from '../types/user';
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
-  imports: [Nav, Home]
+  imports: [Nav, RouterOutlet, NgClass]
 })
 export class App implements OnInit {
   private accountService = inject(AccountService);
+  protected router = inject(Router);
   private http = inject(HttpClient);
   protected readonly title = signal('client');
   protected members = signal<User[]>([]);
