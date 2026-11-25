@@ -14,7 +14,8 @@ public class MemberRepository(AppDbContext dbContext) : IMemberRepository
 
     public async Task<IReadOnlyList<Member>> GetMembersAsync()
     {
-       return await dbContext.Members.ToListAsync();
+       return await dbContext.Members.
+       ToListAsync();
     }
 
     public async Task<IReadOnlyList<Photo>> GetPhotosForMemberAsync(string memberId)
@@ -30,6 +31,6 @@ public class MemberRepository(AppDbContext dbContext) : IMemberRepository
     public void Update(Member member)
     {
         dbContext.Entry(member).State = EntityState.Modified;
-        
+
     }
 }
