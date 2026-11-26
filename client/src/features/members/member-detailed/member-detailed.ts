@@ -16,11 +16,13 @@ export class MemberDetailed implements OnInit {
 private memberService = inject(MemberService);
 private route = inject (ActivatedRoute);
 private router = inject(Router);
-protected member$?: Observable<member>;
+protected member = signal<member | undefined>(undefined);
 protected title = signal<string | undefined>('Profile');
 
 ngOnInit(): void {
-  this.member$ = this.loadMember();
+ this.route.data.subscribe({
+  next: data => this.member.set(data['member'])
+ })
   this.title.set(this.route.firstChild?.snapshot?.title);
   this.router.events.pipe(
     filter(event => event instanceof NavigationEnd)
