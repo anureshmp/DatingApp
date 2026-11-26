@@ -4,13 +4,14 @@ import { User } from '../../types/user';
 import { tap } from 'rxjs';
 import { RegisterCreds } from '../../types/registercreds';
 import { LoginCreds } from '../../types/logincreds';
+import { environment } from '../../environments/environment.development';
 
 @Service()
 export class AccountService {
     private http = inject(HttpClient);
     currentUser = signal<User | null>(null);
 
-    baseUrl = 'https://localhost:5001/api/';
+    baseUrl = environment.apiUrl;
 
     register(creds: RegisterCreds) {
         return this.http.post<User>(this.baseUrl + 'account/register', creds).pipe(
